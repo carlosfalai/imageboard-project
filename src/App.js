@@ -5,6 +5,8 @@ import CommunityGrid from './components/CommunityGrid';
 import CommunityPage from './components/CommunityPage';
 import ThreadPage from './components/ThreadPage';
 import ThreadForm from './components/ThreadForm';
+import PolThreads from './components/PolThreads';
+import PolThreadPage from './components/PolThreadPage';
 import { AuthProvider } from './components/AuthContext';
 import './App.css';
 
@@ -15,7 +17,8 @@ const communities = [
   { id: 'samshamoun', name: 'Sam Shamoun', thumbnail: '/placeholder-samshamoun.jpg' },
   { id: 'tate', name: 'Tristan & Andrew Tate', thumbnail: '/placeholder-tate.jpg' },
   { id: 'freshandfit', name: 'Fresh & Fit', thumbnail: '/placeholder-freshandfit.jpg' },
-  { id: 'siddhanath', name: 'Siddhanath Yoga Parampara', thumbnail: '/placeholder-siddhanath.jpg' }
+  { id: 'siddhanath', name: 'Siddhanath Yoga Parampara', thumbnail: '/placeholder-siddhanath.jpg' },
+  { id: 'pol', name: '4chan /pol/', thumbnail: '/placeholder-pol.jpg' }
 ];
 
 function App() {
@@ -39,6 +42,8 @@ function App() {
                   <ThreadForm />
                 </div>
               } />
+              <Route path="/pol" element={<PolThreads />} />
+              <Route path="/pol/thread/:threadId" element={<PolThreadPage />} />
             </Routes>
           </main>
           <footer className="footer">
