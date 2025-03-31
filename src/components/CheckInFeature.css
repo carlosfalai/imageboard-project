@@ -1,0 +1,177 @@
+.checkin-container {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.checkin-header {
+  margin-bottom: 20px;
+}
+
+.checkin-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.login-prompt {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.login-button {
+  padding: 8px 16px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.events-list {
+  margin-bottom: 20px;
+}
+
+.events-list h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.no-events {
+  color: #888;
+  font-style: italic;
+}
+
+.event-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.event-card {
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.event-card:hover {
+  border-color: #4285f4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-card.selected {
+  border-color: #4285f4;
+  background-color: #e8f0fe;
+}
+
+.event-card.checked-in {
+  border-color: #34a853;
+  background-color: #e6f4ea;
+  cursor: default;
+}
+
+.event-date {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.event-title {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.event-location {
+  font-size: 14px;
+  color: #666;
+}
+
+.checked-in-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  background-color: #34a853;
+  color: white;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.checkin-form-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.checkin-form-container h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.checkin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.form-group.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancel-button {
+  padding: 8px 16px;
+  background-color: #f1f1f1;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.checkin-button {
+  padding: 8px 16px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
