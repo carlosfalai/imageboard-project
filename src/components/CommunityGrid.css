@@ -1,15 +1,20 @@
 .community-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  padding: 20px;
+  margin: 20px 0;
 }
 
 .community-card {
+  background-color: white;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
 }
 
 .community-card:hover {
@@ -19,21 +24,64 @@
 
 .community-thumbnail {
   width: 100%;
-  height: 150px;
+  height: 200px;
   overflow: hidden;
+  position: relative;
 }
 
 .community-thumbnail img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.community-card:hover .community-thumbnail img {
+  transform: scale(1.05);
+}
+
+.community-info {
+  padding: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .community-name {
-  padding: 10px;
-  text-align: center;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 5px;
   color: #333;
-  background-color: #f9f9f9;
-  margin: 0;
+}
+
+.community-description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.community-stats {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+}
+
+.community-grid-loading,
+.community-grid-error {
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+}
+
+.community-grid-loading {
+  color: #666;
+}
+
+.community-grid-error {
+  color: #d93025;
+  background-color: #fce8e6;
+  border-radius: 8px;
 }
