@@ -1,105 +1,77 @@
 const express = require('express');
-const axios = require('axios');
-const xml2js = require('xml2js');
 const router = express.Router();
+const youtubeService = require('../services/youtubeService');
 
-// YouTube RSS feed URL format
-const YOUTUBE_RSS_URL = 'https://www.youtube.com/feeds/videos.xml?channel_id=';
-
-/**
- * Fetch YouTube RSS feed for a specific channel
- * @param {string} channelId - YouTube channel ID
- * @returns {Promise<Array>} - Array of video objects
- */
-const fetchYouTubeRSS = async (channelId) => {
+// Route to manually trigger check for new videos (for testing)
+router.get('/check-new-videos', async (req, res) => {
   try {
-    const response = await axios.get(`${YOUTUBE_RSS_URL}${channelId}`);
-    const parser = new xml2js.Parser({ explicitArray: false });
-    const result = await parser.parseStringPromise(response.data);
-    
-    // Extract video information from the feed
-    const entries = Array.isArray(result.feed.entry) ? result.feed.entry : [result.feed.entry];
-    
-    return entries.map(entry => {
-      // Extract video ID from the link
-      const videoId = entry['yt:videoId'];
-      
-      return {
-        id: entry.id,
-        videoId,
-        title: entry.title,
-        description: entry.content ? entry.content._ : '',
-        publishedAt: entry.published,
-        thumbnailUrl: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
-        channelId
-      };
-    });
+    await youtubeService.checkForNewVideos();
+    res.json({ success: true, message: 'Check for new videos initiated' });
   } catch (error) {
-    console.error(`Error fetching YouTube RSS feed for channel ${channelId}:`, error);
-    throw error;
-  }
-};
-
-/**
- * Get latest videos from a YouTube channel
- */
-router.get('/feed/:channelId', async (req, res) => {
-  try {
-    const { channelId } = req.params;
-    const videos = await fetchYouTubeRSS(channelId);
-    res.json({ success: true, videos });
-  } catch (error) {
+    console.error('Error checking for new videos:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-/**
- * Create a new thread from a YouTube video
- */
-router.post('/create-thread', async (req, res) => {
+// Route to get recent threads created from YouTube videos for a specific community
+router.get('/threads/:communityId', async (req, res) => {
   try {
-    const { video, communityId } = req.body;
+    const { communityId } = req.params;
+    const { limit = 10, page = 1 } = req.query;
     
-    // In a real implementation, this would create a new thread in the database
-    // For now, we'll just return a success response
+    // This would be replaced with actual database query in production
+    // For now, we'll fetch the RSS feed directly
+    const channelId = youtubeService.YOUTUBE_CHANNELS[communityId];
     
-    res.json({ 
-      success: true, 
-      message: 'Thread created successfully',
-      thread: {
-        id: `thread-${Date.now()}`,
-        communityId,
-        title: video.title,
-        content: video.description,
-        youtubeVideoId: video.videoId,
-        createdAt: new Date().toISOString(),
-        isAnonymous: true,
-        upvotes: 0,
-        downvotes: 0,
-        reactions: {}
-      }
-    });
+    if (!channelId) {
+      return res.status(404).json({ 
+        success: false, 
+        error: `Community ${communityId} not found` 
+      });
+    }
+    
+    const videos = await youtubeService.fetchYouTubeRSS(channelId);
+    
+    // Convert videos to thread format
+    const threads = videos.slice(0, limit).map(video => ({
+      title: video.title,
+      videoId: video['yt:videoId'],
+      videoUrl: `https://www.youtube.com/watch?v=${video['yt:videoId']}`,
+      thumbnailUrl: video['media:group'] && video['media:group']['media:thumbnail'] ? 
+                   video['media:group']['media:thumbnail'].$.url : 
+                   `https://img.youtube.com/vi/${video['yt:videoId']}/maxresdefault.jpg`,
+      publishedAt: new Date(video.published),
+      communityId
+    }));
+    
+    res.json({ success: true, threads });
   } catch (error) {
+    console.error('Error getting threads:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-/**
- * Webhook endpoint for YouTube notifications
- * This would be used with YouTube's PubSubHubbub to get real-time notifications
- */
-router.post('/webhook', async (req, res) => {
+// Route to get a specific thread by video ID
+router.get('/thread/:videoId', async (req, res) => {
   try {
-    // Verify the webhook request
-    // In a real implementation, this would validate the request from YouTube
+    const { videoId } = req.params;
     
-    // Process the notification
-    // For now, we'll just return a success response
+    // This would be replaced with actual database query in production
+    // For now, we'll return mock data
+    const thread = {
+      title: 'Example Video Title',
+      videoId,
+      videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
+      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+      publishedAt: new Date(),
+      communityId: 'infowars',
+      comments: []
+    };
     
-    res.status(200).send('OK');
+    res.json({ success: true, thread });
   } catch (error) {
-    console.error('Error processing YouTube webhook:', error);
-    res.status(500).send('Error');
+    console.error('Error getting thread:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
